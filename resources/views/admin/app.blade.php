@@ -18,14 +18,18 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    @yield('admin_css')
+
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
 </head>
 <body>
-    <div id="app">
-        <main>
+   
+    @include('admin.partials.navbar')
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            
             @yield('content')
         </main>
-    </div>
+  
     <script type="text/javascript" src="{{ asset('js/app.js')}}"></script>
 </body>
 </html>
