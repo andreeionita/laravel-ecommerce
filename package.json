@@ -21,5 +21,10 @@
         "sass": "^1.15.2",
         "sass-loader": "^8.0.0",
         "vue-template-compiler": "^2.6.12"
+    },
+    "dependencies": {
+        "ckeditor4": "^4.16.0",
+        "ckeditor5": "^26.0.0",
+        "select2": "^4.1.0-rc.0"
     }
 }

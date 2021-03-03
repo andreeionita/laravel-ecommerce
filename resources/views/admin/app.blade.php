@@ -21,6 +21,8 @@
 
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 <body>
    
@@ -31,5 +33,14 @@
         </main>
   
     <script type="text/javascript" src="{{ asset('js/app.js')}}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+      <!-- Icons -->
+      <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+      <script>
+        feather.replace()
+      </script>
+  
+    @yield('js')
 </body>
 </html>

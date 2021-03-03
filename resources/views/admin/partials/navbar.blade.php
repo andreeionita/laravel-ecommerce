@@ -14,7 +14,7 @@
         <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item">
-            <a class="nav-link active" href="{{ url('/admin')}}">
+            <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard')}}">
                 <span data-feather="home"></span>
                 Dashboard <span class="sr-only">(current)</span>
             </a>
@@ -26,13 +26,13 @@
             </a>
             </li>
             <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.product.index')}}">
+            <a class="nav-link {{ Request::is('admin/product') ? 'active' : '' }}" href="{{ route('admin.product.index')}}">
                 <span data-feather="shopping-cart"></span>
                 Products
             </a>
             </li>
             <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.category.index')}}">
+            <a class="nav-link @if(request()->url() == route('admin.category.index')) {{'active'}} @else {{''}} @endif" href="{{ route('admin.category.index')}}">
                 <span data-feather="bar-chart-2"></span>
                 Categories
             </a>
