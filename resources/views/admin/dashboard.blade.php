@@ -1,6 +1,10 @@
 @extends('admin.app')
 
+@section("breadcrumbs")
 
+      <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+
+@endsection
 
 @section('content')
 

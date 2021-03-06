@@ -28,7 +28,11 @@
    
     @include('admin.partials.navbar')
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              @yield("breadcrumbs")
+            </ol>
+          </nav>
             @yield('content')
         </main>
   
