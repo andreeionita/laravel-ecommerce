@@ -16,6 +16,13 @@
         <div class="col-md-6 text-right">
             <a href="{{ route('admin.category.create')}}" class="btn btn-primary">Add New Category</a>
         </div>
+        <div class="col-md-12">
+            @if(session('message'))
+            <ul class="alert alert-success">
+                <li>{{ session('message')}}</li>
+            </ul>
+            @endif
+        </div>
     </div>
 
     <div class="row mt-3">
@@ -29,13 +36,19 @@
                         <th>Description</th>
                         <th>Slug</th>
                         <th>Categories</th>
+                     
+                        {{-- @if($categories->trashed())
+                        <td>Deleted At</td>
+                        @else --}}
                         <th>Created At</th>
+                        {{-- @endif --}}
+         
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                        @if($categories)
-                        
+                      
+                        @if($categories->count() > 0)
                         @foreach ($categories as $cat)    
                         <tr>
                             <td>{{ $cat->id }}</td>
@@ -52,23 +65,38 @@
                                    <b> {{"Parent Category"}} </b>
                                 @endif
                             </td>
-                            <td>{{ $cat->created_at }}</td>
+                            
+                            @if($cat->trashed())
+                            <td>{{$cat->deleted_at}}</td>
+                            <td><a class="btn btn-info btn-sm" href="{{route('admin.category.recover',$cat->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$cat->id}}')">Delete</a>
+                            <form id="delete-category-{{$cat->id}}" action="{{ route('admin.category.destroy', $cat->id) }}" method="POST" style="display: none;">
+
+                            @method('DELETE')
+                            @csrf
+                                                        </form>
+                            </td>
+                            @else
+                            <td>{{$cat->created_at}}</td>
                             <td>
                                 <a href="{{ route('admin.category.edit' , $cat->id)}}" class="btn btn-info btn-sm">Edit</a> |
+                                <a id="trashed-category-{{ $cat->id }}" class="btn btn-warning btn-sm"  href="{{ route('admin.category.remove' , $cat->id)}}">Trash</a>
+                                |
 
                                 <a href="javascript:;" onclick="confirmDelete('{{ $cat->id}}')" class="btn btn-danger btn-sm">Delete</a> 
-                                <form id="delete-category-{{ $cat->id }}" action={{ route('admin.category.destroy' ,  $cat->id)}} method="POST" style="display: none">
+                                <form id="delete-category-{{ $cat->id }}" action="{{ route('admin.category.destroy', $cat->id) }}" method="POST" style="display: none;">
                                     @method('DELETE')
                                     @csrf
                                 </form>
                             </td>
+                            @endif
                         </tr>
 
                         @endforeach
 
                         @else
+                        
                         <tr>
-                            <td colspan="5">No Categories Found</td>
+                            <td colspan="5" class="alert alert-info">No Categories Found..</td>
                         </tr>
                         @endif
                     
@@ -93,7 +121,8 @@
     function confirmDelete(id){
         let option = confirm("Are you sure , You want to delete this ?")
         if(option){
-            document.getElementById('delete-category'+id).submit();
+            console.log(id)
+            document.getElementById('delete-category-'+id).submit();
         }
     }
 </script>

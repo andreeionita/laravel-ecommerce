@@ -17,6 +17,16 @@ class CategoryController extends Controller
         $categories = Category::paginate(3);
         return view('admin.categories.index' , compact('categories'));
     }
+    /**
+     * Display a listing of the trashed resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function trash()
+    {
+        $categories = Category::onlyTrashed()->paginate(3);
+        return view('admin.categories.index' , compact('categories'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -92,17 +102,47 @@ class CategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Recover the specified resource from storage.
+     *
+     * @param  \App\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function recover($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+        if($category->restore()){   
+            return back()->with('message' , 'Category Sussessfully Recovered');
+        } else {
+        return back()->with('message' , 'Error Recovering Record');
+        }
+    }
+    /**
+     * Delete the specified resource from storage.
      *
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
     public function destroy(Category $category)
     {
-        if($category->delete()){
-            return back()->view('message' , 'Record Sussessfully Deleted');
+        if($category->forceDelete()){   
+            return back()->with('message' , 'Record Sussessfully Deleted');
         } else {
-        return back()->view('message' , 'Error Deleting');
+        return back()->with('message' , 'Error Deleting Record');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function remove(Category $category)
+    {
+        if($category->delete()){
+            return back()->with('message' , 'Record Sussessfully Trashed');
+        } else {
+        return back()->with('message' , 'Error Deleting Record');
         }
     }
 }
