@@ -24,7 +24,7 @@ class CategoryController extends Controller
      */
     public function trash()
     {
-        $categories = Category::onlyTrashed()->paginate(3);
+        $categories = Category::onlyTrashed()->paginate(6);
         return view('admin.categories.index' , compact('categories'));
     }
 
@@ -76,8 +76,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        $categories = Category::all();
+        $categories = Category::where('id' , '!=' , $category->id)->get();
         return view('admin.categories.create' , ['categories' => $categories , 'category' => $category]);
+       
     }
 
     /**
@@ -89,6 +90,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+
+        $request->validate([
+            'title'=> 'required|min:5',
+            'slug'=>'required|min:5|unique:categories',
+        ]);
+
         $category->title = $request->title;
         $category->description = $request->description;
         $category->slug = $request->slug;
@@ -124,7 +131,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        if($category->forceDelete()){   
+        if($category->childrens()->detach() && $category->forceDelete()){   
             return back()->with('message' , 'Record Sussessfully Deleted');
         } else {
         return back()->with('message' , 'Error Deleting Record');

@@ -35,52 +35,60 @@
                         <th>Description</th>
                         <th>Slug</th>
                         <th>Categories</th>
-                     
-                      
-                        <th>Created At</th>
-                    
-         
-                        <th>Action</th>
+                        <th>Price</th>
+                        <th>Thumbnail</th>
+                        <th>Date Created</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                       
                         @if($products->count() > 0)
-                        @foreach ($categories as $cat)    
+                        @foreach ($products as $product)    
                         <tr>
-                            <td>{{ $cat->id }}</td>
-                            <td>{{ $cat->title }}</td>
+                            <td>{{ $product->id }}</td>
+                            <td>{{ $product->title }}</td>
                             <td style="white-space: break-spaces;
-                            width: 378px;">{!! $cat->description  !!}</td>
-                            <td>{{ $cat->slug  }}</td>
+                            width: 378px;">{!! $product->description  !!}</td>
+                            <td>{{ $product->slug  }}</td>
                             <td>
-                                @if($cat->childrens()->count() > 0)
-                                @foreach ($cat->childrens as $children)
+                                @if($product->categories()->count() > 0)
+                                @foreach ($product->categories as $children)
                                     {{ $children->title }},
                                 @endforeach
                                 @else
-                                   <b> {{"Parent Category"}} </b>
+                                   <b> {{"Product"}} </b>
                                 @endif
                             </td>
+                            <td>Rs{{$product->price}}</td>
+                            <td><img src="{{asset($product->thumbnail)}}" alt="{{$product->title}}" class="img-responsive" height="50"/></td>
+                           
+                            {{-- <td>{{ $product->created_at}}</td> --}}
                             
-                            @if($cat->trashed())
-                            <td>{{$cat->deleted_at}}</td>
-                            <td><a class="btn btn-info btn-sm" href="{{route('admin.category.recover',$cat->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$cat->id}}')">Delete</a>
-                            <form id="delete-category-{{$cat->id}}" action="{{ route('admin.category.destroy', $cat->id) }}" method="POST" style="display: none;">
+                            @if($product->trashed())
 
-                            @method('DELETE')
-                            @csrf
-                                                        </form>
+                            {{-- if it is trashed --}}
+
+                            <td>{{$product->deleted_at}}</td>
+                            <td><a class="btn btn-info btn-sm" href="{{route('admin.product.recover',$product->id)}}">Restore</a> | <a class="btn btn-danger btn-sm" href="javascript:;" onclick="confirmDelete('{{$product->id}}')">Delete</a>
+                                <form id="delete-product-{{$product->id}}" action="{{ route('admin.product.destroy', $product->id) }}" method="POST" style="display: none;">
+
+                                @method('DELETE')
+                                @csrf
+                                </form>
                             </td>
                             @else
-                            <td>{{$cat->created_at}}</td>
+
+                            {{-- if it is not trashed --}}
+
+                            <td>{{$product->created_at}}</td>
                             <td>
-                                <a href="{{ route('admin.category.edit' , $cat->id)}}" class="btn btn-info btn-sm">Edit</a> |
-                                <a id="trashed-category-{{ $cat->id }}" class="btn btn-warning btn-sm"  href="{{ route('admin.category.remove' , $cat->id)}}">Trash</a>
+                                <a href="{{ route('admin.product.edit' , $product->id)}}" class="btn btn-info btn-sm">Edit</a> |
+                                <a id="trashed-product-{{ $product->id }}" class="btn btn-warning btn-sm"  href="{{ route('admin.product.remove' , $product->id)}}">Trash</a>
                                 |
 
-                                <a href="javascript:;" onclick="confirmDelete('{{ $cat->id}}')" class="btn btn-danger btn-sm">Delete</a> 
-                                <form id="delete-category-{{ $cat->id }}" action="{{ route('admin.category.destroy', $cat->id) }}" method="POST" style="display: none;">
+                                <a href="javascript:;" onclick="confirmDelete('{{ $product->id}}')" class="btn btn-danger btn-sm">Delete</a> 
+                                <form id="delete-product-{{ $product->id }}" action="{{ route('admin.product.destroy', $product->id) }}" method="POST" style="display: none;">
                                     @method('DELETE')
                                     @csrf
                                 </form>
@@ -105,6 +113,16 @@
 </div>
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>
-        feather.replace()
+        feather.replace();
+        </script>
+    <script>
+
+    function confirmDelete(id){
+        let option = confirm("Are you sure , you wnat to delete it");
+        if(option){
+            console.log(id);
+            document.getElementById('delete-product-'+id).submit();
+        }
+    }
         </script>
 @endsection
