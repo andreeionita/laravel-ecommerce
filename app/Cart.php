@@ -32,4 +32,44 @@ class Cart
     	$this->totalPrice += $product->price;
 
     }
+    public function removeProduct($product){
+        
+    	if($this->contents){
+            if(array_key_exists($product, $this->contents)){
+                $rProduct = $this->contents[$product];
+                $this->totalQty -= $rProduct['qty'];
+                $this->totalPrice -= $rProduct['price'];
+                array_forget($this->contents, $product);
+            }
+        }
+    }
+    // public function updateProduct($product,$qty){
+        
+        
+    // 	if($this->contents){
+    //         if(array_key_exists($product, $this->contents)){
+    //             $products = $this->contents[$product];
+    //         }
+    //     }
+    //     // dd($product);
+    //     $products['qty']+=$qty;
+    // 	$products['price'] = $product->price * $products['qty'];
+    // 	$this->contents[$product->slug] = $products;
+    // 	$this->totalQty+=$qty;
+    // 	$this->totalPrice += $product->price;
+    // }
+
+
+    public function getContents(){
+        return $this->contents;
+    }
+    public function getTotalQty(){
+        return $this->totalQty;
+    }
+    public function getTotalPrice(){
+        return $this->totalPrice;
+    }
+    public function countProduct(){
+        return count($this->contents);
+    }
 }

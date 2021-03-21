@@ -82,6 +82,51 @@ class ProductController extends Controller
     }
 
     /**
+     * Display the cart.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function cart()
+    {
+        if(!Session::has('cart')){
+            return view('products.cart');
+        }
+        $cart = Session::get('cart');
+        // dd($cart);
+        return view('products.cart', compact('cart'));  
+    }
+    /**
+     * Display the cart.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function removeProduct($product)
+    {
+        // dd($product);
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+      $cart = new Cart($oldCart);
+      $cart->removeProduct($product);
+      Session::put('cart', $cart);
+      return back()->with('message', "Product $product has been successfully removed From the Cart");
+    }
+    /**
+     * Display the cart.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    // public function updateProduct($product , Request $request)
+    // {
+    //     // dd($product);
+    //     $oldCart = Session::has('cart') ? Session::get('cart') : null;
+    //   $cart = new Cart($oldCart);
+    //   $cart->updateProduct($request , $request->qty);
+    //   Session::put('cart', $cart);
+    //   return back()->with('message', "Product $product has been successfully updated in the Cart");
+    // }
+    /**
      * Display the specified resource.
      *
      * @param  \App\Product  $product
@@ -89,7 +134,7 @@ class ProductController extends Controller
      */
     public function show()
     {
-        dd(Session::get('cart'));
+        // dd(Session::get('cart'));
         $categories = Category::all();
         $products = Product::paginate(2);
         return view('products.all' , compact('categories' , 'products'));    
